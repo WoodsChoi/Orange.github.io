@@ -1,0 +1,721 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="游戏设计," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言此篇为本人原创，转载请标注原地址！
+前两天看到云风的blog上有写10连抽保底的概率问题[传送门]，有点意思，所以开个文章整理一下，无论程序也好策划也好，以后都能用到。
+文中的描述在这里就不重复了，云风已经写的很清楚，概率的把握对游戏很重要。我做过的几个项目中几乎所有的抽卡都是按概率抽取然后做个保底，或者每抽几次强行给一个。其实做为一个游戏开发者，我对这种暴力产出是很抵触的，少了抽卡中“抽”的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏抽卡中的概率学">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/10card-rate/index.html">
+<meta property="og:site_name" content=""芒鹿"">
+<meta property="og:description" content="前言此篇为本人原创，转载请标注原地址！
+前两天看到云风的blog上有写10连抽保底的概率问题[传送门]，有点意思，所以开个文章整理一下，无论程序也好策划也好，以后都能用到。
+文中的描述在这里就不重复了，云风已经写的很清楚，概率的把握对游戏很重要。我做过的几个项目中几乎所有的抽卡都是按概率抽取然后做个保底，或者每抽几次强行给一个。其实做为一个游戏开发者，我对这种暴力产出是很抵触的，少了抽卡中“抽”的">
+<meta property="og:updated_time" content="2017-10-20T23:44:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏抽卡中的概率学">
+<meta name="twitter:description" content="前言此篇为本人原创，转载请标注原地址！
+前两天看到云风的blog上有写10连抽保底的概率问题[传送门]，有点意思，所以开个文章整理一下，无论程序也好策划也好，以后都能用到。
+文中的描述在这里就不重复了，云风已经写的很清楚，概率的把握对游戏很重要。我做过的几个项目中几乎所有的抽卡都是按概率抽取然后做个保底，或者每抽几次强行给一个。其实做为一个游戏开发者，我对这种暴力产出是很抵触的，少了抽卡中“抽”的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/10card-rate/"/>
+
+
+
+
+
+  <title> 游戏抽卡中的概率学 | "芒鹿" </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">"芒鹿"</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">程序员的道路 -- 鹿林的博客</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/10card-rate/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="鹿 林">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/uploads/lutouxiang.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content=""芒鹿"">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt=""芒鹿"" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                游戏抽卡中的概率学
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-21T07:44:52+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/游戏/" itemprop="url" rel="index">
+                    <span itemprop="name">游戏</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此篇为本人原创，转载请标注原地址！</p>
+<p>前两天看到云风的blog上有写10连抽保底的概率问题[<a href="http://blog.codingnow.com/2017/01/exponential_distribution.html#more" target="_blank" rel="external">传送门</a>]，有点意思，所以开个文章整理一下，无论程序也好策划也好，以后都能用到。</p>
+<p>文中的描述在这里就不重复了，云风已经写的很清楚，概率的把握对游戏很重要。我做过的几个项目中几乎所有的抽卡都是按概率抽取然后做个保底，或者每抽几次强行给一个。其实做为一个游戏开发者，我对这种暴力产出是很抵触的，少了抽卡中“抽”的乐趣，更多的是目的性的去获取，因为玩家知道我再抽xx次我就能获得牛逼卡了。</p>
+<p>文中给出的方案正是规避了暴力产出，合理地实现概率分布(也是一种玄学啊)。接下来要重点讲一下实现原理。</p>
+<h2 id="指数分布"><a href="#指数分布" class="headerlink" title="指数分布"></a>指数分布</h2><p>云风的文中说到指数分布，什么是指数分布？这里我引一下阮一峰的10分钟教程[<a href="http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html" target="_blank" rel="external">传送门</a>]。博客里写的很通俗明了，我简单说明下。</p>
+<p>首先，泊松分布，它表示的是一段时间内事件发生的概率。拿抽卡来讲就是说，比如抽10张卡能抽中1张/2张/… 橙卡的概率。这里的“抽10张”即表示一段时间，“抽中橙卡”是事件发生</p>
+<p>指数分布是从泊松分布中推导出来的，是泊松过程的事件间隔的分布。它表示两个事件发生间隔的概率问题。再拿抽卡来说，就是两次抽中橙卡之间，抽了多少张白卡。</p>
+<p>简单介绍完两种概率分布后探讨下为什么选了指数分布模型。云风解释了两次抽中橙卡之间抽白卡的数量的值范围是[0,+inf)，符合指数分布的随机数列范围。值范围符合就符合抽卡的模型吗？接下来我们来验证一下。</p>
+<p>指数分布的分布函数 f(x)=1-e^(-λx)，函数里的λ表示事件的频率，x变量是时间间隔，10分钟教程的文中是以生孩子举例来说，1小时平均生3个，那么这里的λ的值为3，如果求半小时内生孩子概率的话x带入0.5。换到抽卡来说，比如抽橙卡的概率为10%，想求10连抽能抽到橙卡的概率的话，设想一下概率为10%即表示抽一次卡能得到0.1个橙卡，橙卡的频率λ为0.1，x表示时间间隔，10连抽的时间间隔即是10次抽卡，x取值10。带入到公式 p=f(x)=1-e^(-0.1*10), p约得0.63，就是说10连抽能抽到橙卡的概率为0.63(这里指的是抽到橙卡就算，不计数)。用程序模拟一下看看是否满足这个概率呢，我以0.1的概率做了100次10连抽，记录下有多少次10连抽是抽到橙卡的，然后这个操作我再循环100遍取了个平均值，看看平均有多少次：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;lua rand.lua</div><div class="line">66.27</div><div class="line">&gt;lua rand.lua</div><div class="line">65.38</div><div class="line">&gt;lua rand.lua</div><div class="line">65.75</div></pre></td></tr></table></figure>
+<p>平均次数似乎很接近0.63这个概率。再用另一组数据验证一下，我以20连抽试试获得橙卡的概率为多少，带入公式 p=1-e^(-0.1*20), p约得0.86。再同样的模拟下看看连续100次20连抽，平均有多少次获得橙卡：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;lua rand.lua</div><div class="line">87.39</div><div class="line">&gt;lua rand.lua</div><div class="line">87.77</div><div class="line">&gt;lua rand.lua</div><div class="line">87.88</div></pre></td></tr></table></figure>
+<p>似乎也很接近。30连抽概率得0.95，程序模拟3次取样分别为95.87，95.63，95.58。这个概率就更接近了，从而可以说明指数分布是基本满足(不是严格满足)游戏中抽卡概率这个模型的。</p>
+<h2 id="运用到游戏"><a href="#运用到游戏" class="headerlink" title="运用到游戏"></a>运用到游戏</h2><p>上面我是模拟了能抽到橙卡的概率，现在我要逆推公式，从公式 p=1-e^(-λx) 的定义上看，指数分布是表示λ一定的时候x时间内发生事件的概率p，λ是橙卡的频率。那么我的目的是给橙卡，我要做的就是随机出一个p，让玩家过度x个白卡，p是概率，满足范围(0,1)，我只要从0到1随出一个数获取x值就可以了。</p>
+<p>从公式 p=1-e^(-λx)推导得出 x=(-1/λ)ln(1-p)，即是云风文中列出的公式代码，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">math.floor(math.log(1-math.random()) * (-rate))</div></pre></td></tr></table></figure>
+<p>数学模型确定了，用上述公式随到的随机数当做玩家抽卡时的白卡过度，比如说随到随机数为13，那么玩家就必须先抽满13张白卡，然后再抽卡时直接给一张橙卡，之后再随一个数，重复这个操作。</p>
+<p>不过也有问题，10%的概率，λ设为0.1代入到公式中小概率会随到比较大的数，比如50或更大。以玩家角度来说10%概率，他们会通俗的理解为抽10张可能会抽到一张，但是要过度50张白卡，那这个玩家可能就流失了。所以要加入一个保底的策略，即设定一个阈值，随到的数比这个阈值大，那么干脆就用这个阈值去计算了，说白了就是点背到极致的极限值。但如果设定这么一个阈值的话，整体上抽橙卡的概率就会提高，云风文中说道10%概率的卡如果阈值设置为10，那么整体概率会上升到大约21%，那么这个阈值就需要设置更大，云风给出了23这么一个数。我用程序模拟了一下这个过程，先是阈值设为10：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&gt;lua rand.lua</div><div class="line">2138</div><div class="line">2141</div><div class="line">2120</div><div class="line">2101</div><div class="line">2117</div><div class="line">2157</div><div class="line">2091</div><div class="line">2097</div><div class="line">2132</div><div class="line">2105</div><div class="line">-----------------------</div><div class="line">2119.9</div></pre></td></tr></table></figure>
+<p>我进行了10次1万抽，记录了获得橙卡的个数，最下面一行是10次结果的平均数，果然概率保持在21%左右，那么按云风给的数23，概率就会保持在10%了么，我用阈值为23又模拟了一次：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">lua rand.lua</div><div class="line">1265</div><div class="line">1277</div><div class="line">1248</div><div class="line">1268</div><div class="line">1226</div><div class="line">1237</div><div class="line">1249</div><div class="line">1245</div><div class="line">1262</div><div class="line">1282</div><div class="line">-----------------------</div><div class="line">1255.9</div></pre></td></tr></table></figure>
+<p>模拟结果有偏差，并不是10%，但为什么会选这么一个阈值呢？阈值为多少时会接近10%呢？我带着疑问继续调整阈值再次模拟，模拟结果这个阈值约为45的时候会10%左右，而且这个阈值越大，概率变动会越小。这也不奇怪，因为指数函数的曲线弧度会随着变量越大越缓。</p>
+<p>但问题来了，为了严格追求10%的精准概率，会将这个阈值设为45吗？10%概率的卡，玩家抽了45个还没抽到，那玩家估计已经骂街卸载游戏了。那么这个阈值怎么确定？</p>
+<p>我们从分布函数的曲线入手，曲线图我就不粘贴了，大家去搜下，简单说就是一个上升弧度的曲线，随着变量越大弧度越小。那么怎么在曲线上确定这么一个阈值？我需要找这么一个点，从这个点往后弧度变化会比较小。对曲线某个点做一阶求导代表这个点在曲线上得斜率，那么好办了，我们要找斜率比较平坦(斜率越小越平坦)的这个坐标。分布函数 f=1-e^(-λx) 的曲线受λ的影响，λ越小曲线整体就会越缓，那么我们要找的这个斜率就要更平坦一些，所以也可以说这个斜率的值会受λ值得影响，它们的关系可以简单看成正比关系。那么干脆我就假设斜率的值和λ值相等，然后找出这个阈值(随机数变量)。</p>
+<p>从分布函数 f=1-e^(-λx) 一阶求导得出 k=e^(-λx)，将云风给出的阈值23代入x，橙卡概率0.1代入λ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; math.pow(2.71828, -0.1*23)</div><div class="line">0.10025899883351</div></pre></td></tr></table></figure>
+<p>结果k约等于0.1，和λ相等，我的推导得到了验证。下面，我再做一个模拟验证一下这个结论。阴阳师这个火爆的游戏，大家都为抽不到SSR而苦恼，传说SSR的概率为1%，那么我验证下这个阈值设置为多少时抽卡整体的概率会保持1%。一阶导数公式逆推得 x=(-1/λ)*ln(k),代入0.01:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; (-1/0.01)*math.log(0.01)</div><div class="line">460.51701859881</div></pre></td></tr></table></figure>
+<p>这个阈值得出约为460，将这个阈值代入到我的模拟程序中模拟看看到底最终整体概率会不会接近1%，下面是我模拟的小程序，和上面做的模拟是一样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">math.randomseed(os.time())</div><div class="line"></div><div class="line">function erand(rate)</div><div class="line">	while true do</div><div class="line">		local p = math.floor(math.log(1-math.random()) * (-rate))</div><div class="line">		if p &lt; 460 then</div><div class="line">			return p</div><div class="line">		end</div><div class="line">	end</div><div class="line">end</div><div class="line"></div><div class="line">local p = 0;</div><div class="line">for j = 1, 10 do</div><div class="line">	local c = 0;</div><div class="line">	local r = erand(100);</div><div class="line"></div><div class="line">	for i = 1, 10000 do</div><div class="line">		if r == 0 then</div><div class="line">			c = c + 1</div><div class="line">		end</div><div class="line">		r = r - 1</div><div class="line">		if r &lt; 0 then</div><div class="line">			r = erand(100)</div><div class="line">		end</div><div class="line">	end</div><div class="line">	print(c)</div><div class="line">	p = p + c</div><div class="line">end</div><div class="line"></div><div class="line">print(&quot;-----------------------&quot;)</div><div class="line">print(p/10)</div></pre></td></tr></table></figure>
+<p>我执行以下，看看结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&gt;lua rand.lua</div><div class="line">111</div><div class="line">100</div><div class="line">107</div><div class="line">105</div><div class="line">107</div><div class="line">101</div><div class="line">92</div><div class="line">104</div><div class="line">108</div><div class="line">98</div><div class="line">-----------------------</div><div class="line">103.3</div></pre></td></tr></table></figure>
+<p>10000次抽卡，得到平均103.3张橙卡，是不是满足1%的概率。通过这个验证是不是觉得阴阳师的月见黑比较坑，比较不合理呢？传说月见黑要500次抽卡抽不中SSR才能获得这个头衔，但从上面的计算来看1%的概率最合理的抽卡数不能超过460。所以月见黑这个头衔要么就是阴阳师的抽卡做的不合理，要么SSR的概率要小于1%。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>游戏中的抽卡看似简单，但暗含各种学问，而且像阴阳师这种游戏，抽卡其实是游戏收入的大头。作为游戏开发者，无论策划还是程序都需要把控好游戏中的概率，对玩家来说看似是玄学，对我们来说这可是科学。最后，我们需要记好这个公式 <strong>x=(-1/p)*ln(p)</strong>，p是概率，策划只需要计算给出这个x值，让程序按照我上面贴出的模拟程序跑就可以了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>云风的BLOG 10连抽保底的概率模型<a href="http://blog.codingnow.com/2017/01/exponential_distribution.html#more" target="_blank" rel="external">http://blog.codingnow.com/2017/01/exponential_distribution.html#more</a><br>泊松分布和指数分布：10分钟教程<a href="http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2015/06/poisson-distribution.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏设计/" rel="tag"># 游戏设计</a>
+          
+        </div>
+      
+
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/lutouxiang.jpg"
+               alt="鹿 林" />
+          <p class="site-author-name" itemprop="name">鹿 林</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指数分布"><span class="nav-number">2.</span> <span class="nav-text">指数分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运用到游戏"><span class="nav-number">3.</span> <span class="nav-text">运用到游戏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">鹿 林</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body>
+</html>
+
+  <!-- 页面点击小红心 -->
+  <script type="text/javascript" src="/js/src/mouselove.js"></script>

@@ -283,8 +283,8 @@ a {
   word-wrap: break-word;
 }
 a:hover {
-  color: #222;
-  border-bottom-color: #222;
+  color: #262a30;
+  border-bottom-color: #262a30;
 }
 ul {
   list-style: none;
@@ -836,8 +836,8 @@ pre .javascript .function {
   padding: 0 20px;
   font-size: 14px;
   color: #fff;
-  background: #222;
-  border: 2px solid #222;
+  background: #262a30;
+  border: 2px solid #262a30;
   text-decoration: none;
   border-radius: 0;
   transition-property: background-color;
@@ -847,8 +847,8 @@ pre .javascript .function {
 }
 .btn:hover,
 .post-more-link .btn:hover {
-  border-color: #222;
-  color: #222;
+  border-color: #262a30;
+  color: #262a30;
   background: #fff;
 }
 .btn-bar {
@@ -900,7 +900,7 @@ pre .javascript .function {
 .pagination .prev:hover,
 .pagination .next:hover,
 .pagination .page-number:hover {
-  border-top-color: #222;
+  border-top-color: #262a30;
 }
 .pagination .space {
   padding: 0;
@@ -931,7 +931,7 @@ pre .javascript .function {
   .pagination .prev:hover,
   .pagination .next:hover,
   .pagination .page-number:hover {
-    border-bottom-color: #222;
+    border-bottom-color: #262a30;
   }
 }
 .comments {
@@ -952,7 +952,7 @@ pre .javascript .function {
   z-index: 1050;
   padding: 0 6px;
   width: 25px;
-  background: #222;
+  background: #262a3a;
   font-size: 12px;
   opacity: 1;
   color: #fff;
@@ -978,7 +978,7 @@ pre .javascript .function {
   bottom: 19px;
 }
 .header {
-  background: url("../image/timg.jpeg");
+  background: url("../image/deerbg-f.png");
   background-attachment: fixed;
   background-size: 100%;
 }
@@ -987,7 +987,7 @@ pre .javascript .function {
 }
 .headband {
   height: 3px;
-  background: #222;
+  background: #262a30;
 }
 .site-meta {
   margin: 0;
@@ -1003,11 +1003,11 @@ pre .javascript .function {
   display: inline-block;
   padding: 0 40px;
   color: #fff;
-  background: #222;
+  background: none;
   border-bottom: none;
 }
 .brand:hover {
-  color: #fff;
+  color: #555;
 }
 .logo {
   display: inline-block;
@@ -1026,7 +1026,7 @@ pre .javascript .function {
 .site-subtitle {
   margin-top: 10px;
   font-size: 13px;
-  color: #999;
+  color: #f5f5f5;
 }
 .use-motion .brand {
   opacity: 0;
@@ -1095,12 +1095,14 @@ pre .javascript .function {
   line-height: inherit;
   border-bottom: 1px solid transparent;
   transition-property: border-color;
+  color: #666;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-delay: 0s;
 }
 .menu .menu-item a:hover {
-  border-bottom-color: #222;
+  border-bottom-color: #666;
+  color: #555;
 }
 .menu .menu-item .fa {
   margin-right: 5px;
@@ -1141,6 +1143,16 @@ pre .javascript .function {
   -ms-transform: rotate(30deg);
   -o-transform: rotate(30deg);
   transform: rotate(30deg);
+}
+.post-body p a {
+  color: #0593d3;
+  border-bottom: none;
+  border-bottom: 1px solid #0593d3;
+}
+.post-body p a:hover {
+  color: #fc6423;
+  border-bottom: none;
+  border-bottom: 1px solid #fc6423;
 }
 .posts-expand {
   padding-top: 40px;
@@ -1427,7 +1439,7 @@ pre .javascript .function {
 .post-more-link .btn {
   color: #fff;
   font-size: 14px;
-  background: #222;
+  background: #262a30;
   border-radius: 0;
   line-height: 2;
   margin: 0 4px 8px 4px;
@@ -1470,7 +1482,7 @@ pre .javascript .function {
   border-bottom: none;
 }
 .post-nav-item a:hover {
-  color: #222;
+  color: #262a30;
   border-bottom: none;
 }
 .post-nav-item a:active {
@@ -1538,7 +1550,7 @@ pre .javascript .function {
   width: 0;
   z-index: 1040;
   box-shadow: inset 0 2px 6px #000;
-  background: #222;
+  background: #262a3a;
   -webkit-transform: translateZ(0);
 }
 .sidebar a {
@@ -1571,7 +1583,7 @@ pre .javascript .function {
   width: 15px;
   height: 15px;
   padding: 5px;
-  background: #222;
+  background: #262a3a;
   line-height: 0;
   z-index: 1050;
   cursor: pointer;
@@ -1740,7 +1752,7 @@ img:hover {
 .site-state-item {
   display: inline-block;
   padding: 0 15px;
-  border-left: 1px solid #333;
+  border-left: 1px solid #262a3a;
 }
 .site-state-item:first-child {
   border-left: none;
@@ -1799,7 +1811,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #9326b9;
+  background: #eed29a;
 }
 .links-of-blogroll {
   font-size: 13px;
